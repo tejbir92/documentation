@@ -1,0 +1,88 @@
+The ARC process is evolving from a manual, administrative task into a streamlined system. By automating the heavy lifting, we are reducing the manual burden on General Managers and ensuring our rate adjustments are consistent, competitive, and compliant with regional regulations. 
+
+Documentation on the original Annual Rate Change Process [here](https://www.google.com/url?sa=E&amp;q=https%3A%2F%2Fcarezone.thekey.com%2Fthekey%2Fls%2Fcontent%2F1228336965612157%2Fsalesforce-annual-rate). 
+
+The following summary outlines the logic enhancements and workflow shifts for the new ARC process. 
+
+### **1\. Automated Rate Logic** 
+
+The system will now handle the calculations that were previously manual. For all eligible clients, the system will automatically: 
+
+* **Calculate the "Go Forward Bill Rate":** Sets the new rate at **4% above the current rate** or the **median rate**, whichever is higher.
+* **Default Action Fields:** Automatically toggles "Rate Increase" and "Send Letter" to **Yes**.
+* **Auto-Approval:** If the rate meets or exceeds the 4%/median threshold, the record is auto-approved and the letter is queued after submitted by GM.
+
+### **2\. Strategic Exclusions** 
+
+To prevent errors, the system will automatically exclude clients associated with specific tags or ClearCare locations that require specialized handling. 
+
+* **Exclusion Tags:** *Community Care, Flex-Care, VA, VA Client, CareScout, VCH,* and *Partner Rate Exception.*
+
+### **3\. Regional Compliance (Effective Dates)** 
+
+We are automating the "Effective Date" logic based on specific state and international labor/contract laws. The system will calculate the effective date based on the letter send date (the 20th of the month): 
+
+| **Region**            | **Notice Period** | **Effective Date Calculation** |
+| --------------------- | ----------------- | ------------------------------ |
+| **Connecticut (CT)**  | 60 Days           | Send Date + 60 days            |
+| **Canada**            | 45 Days           | Send Date + 45 days            |
+| **All Other Regions** | 30 Days           | Send Date + 30 days            |
+
+### **4\. Refined Approval Workflow** 
+
+We are moving to "Approval by Exception." GMs are required to submit for approval if they wish to deviate from the standard growth strategy. 
+
+* **Approval Required IF:**  
+  * The GM opts for **No** rate increase.
+  * The GM attempts to set a rate **lower** than the 4% increase or the median rate.
+* **Requirements:** Any deviation requires a **Detailed Reason** in the comments section.
+* **Routing:** These exceptions will route directly to the **Regional Director of Operations (RDO)** for review.
+
+### **5\. Operational Timeline** 
+
+* **Monthly Cycle:** Letters will continue to be generated and sent automatically on the **20th of each month**.
+* **Primary Benefit:** This shift eliminates redundant data entry and ensures that the majority of our annual increases happen seamlessly, allowing the leadership team to focus on high-level exceptions rather than routine updates.
+
+### **6\. Task List Views** 
+
+* 4 list view options for General Managers. The GM will view the list views and process via ARC process accordingly  
+  * My ARC — To Review (Primary list used to push records through Process)
+  * My ARC — Pending Approval from RDO
+  * My ARC — Letter Review (no approval required for letter to send)
+  * My ARC — Auto-Closed (Exclusion Rules)
+* 1 list view option for Regional Directors to be able to assign ARC records that do not have a GM assigned.  
+  * Unowned ARC Records
+* 1 Dashboard  
+  * [https://homecareassistance.lightning.force.com/lightning/r/Dashboard/01ZUH000001Rb7l2AC/view?queryScope=userFolders](https://www.google.com/url?sa=E&amp;q=https%3A%2F%2Fhomecareassistance.lightning.force.com%2Flightning%2Fr%2FDashboard%2F01ZUH000001Rb7l2AC%2Fview%3FqueryScope%3DuserFolders)
+
+### **7\. Reminder Notification** 
+
+* Record owners (General Managers) will receive a reminder notification if a record has not progressed through the process (submitted for approval or auto-approved) within 7 days of the letter send date (the 20th of the month).
+* During the same 7-day timeframe, if the record remains pending approval, a reminder notification will also be sent to the GM’s manager (Regional Director).
+
+### **8\. FAQs -** **Edge cases and troubleshooting** 
+
+* "Why didn't my record go to my GM for approval?"  
+  * Under smart routing, only exception records require GM approval — Rate = No, or Go Forward below the baseline (greater of 4% or Median). If the Processing Route column reads Auto-Approve, the system detected a routine rate increase and approved it directly; no GM step is required. This is intentional — it frees up your GM from reviewing routine adjustments.
+* "My GM is out of office — who approves?"  
+  * The GM approval process allows delegation, so your GM's delegated approver can act. You also have two fallback approvers — audraw1@thekey.com and tsilton1@thekey.com — either of whom can approve any pending GM item. First response wins.
+* "The result banner said 'X skipped (not at New or Review stage)' — what does that mean?"  
+  * You selected records that were already past the New or Review stages (for example, already at Rate Change Approved, Create, or a closed terminal stage). The system doesn't re-process those — they skip and the rest of the batch continues. Refresh your list view and those records will have moved to the appropriate stage's list.
+* "I approved my records but they're still at Rate Change Approved, not Create"  
+  * This is expected. All ARC records for the same Account created on the same date have to reach Rate Change Approved together before any of them advance. Check your queue for other rows on the same Account — someone probably has a sibling record still at New or Approval Needed. Once every sibling is approved, all of them move forward at once.
+* "My rejected record — why was it rejected?"  
+  * Open the record → Approval History related list → read the approver's comments. If the approver didn't leave a comment, reach out to them directly.
+* "Record was auto-closed as 'No Rate Increase'"  
+  * The Account had an exclusion tag (CareScout, Community Care, Flex-Care, Partner Rate Exception, VA, VA Client, or VCH). No action needed. The Comments field explains which tag triggered it.
+* "I edited a record after approval and now it's back at New"  
+  * If you edited Rate Increase to No, or dropped Go Forward Bill Rate below the baseline (greater of Current × 1.04 or Median Rate), the system automatically reset Stage to New so the edit runs through approval again. Process it like any other New record.
+* "A rate in the letter is wrong"  
+  * Reject the Letter Approval. The link clears, Stage returns to New, the record re-enters the Workato flow. Edit Go Forward Bill Rate before running Process Selected again.
+* "My record doesn't have an Owner I expect"  
+  * The system matches the Account's TheKey contact email to an active user, then falls back to the manager chain. If none match, the record stays assigned to the integration user. Reassign to correct owner as needed
+* “I need to do an off-cycle rate increase”  
+  * The SF team will need at least 5 business days (but the more time, the better) to process any off-cycle requests.The most effective way is to save a copy of[ ](https://www.google.com/url?sa=E&amp;q=https%3A%2F%2Fdocs.google.com%2Fspreadsheets%2Fd%2F1K1kDF1SwSSDEtvdoQT20Mrj0cG1-if5KVUMLcKSBdTY%2Fedit%3Fgid%3D2088389476%23gid%3D2088389476)[this spreadsheet](https://www.google.com/url?sa=E&amp;q=https%3A%2F%2Fdocs.google.com%2Fspreadsheets%2Fd%2F1K1kDF1SwSSDEtvdoQT20Mrj0cG1-if5KVUMLcKSBdTY%2Fedit%3Fgid%3D2088389476%23gid%3D2088389476), fill out the appropriate information, and send to SFIT@thekey.com. **These requests will sync up with the next scheduled rate increase letter and do not deploy independently.** If you need to do an adhoc rate increase quickly due to a schedule change, change in condition, or other circumstance, your teams of course still have the option to have the client sign a new CCA with the updated bill rate. \*\*Restrictions apply to regulated states requiring advanced notice for clients\*\*
+
+**Still need help?** 
+
+Email [SFIT@thekey.com](https://www.google.com/url?sa=E&amp;q=mailto%3ASFIT%40thekey.com)
